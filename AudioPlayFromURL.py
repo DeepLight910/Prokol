@@ -30,7 +30,7 @@ def play_audio_from_url(url):
     # Путь к кэш-директории
     cache_dir = os.path.expanduser("~/Documents/Audio")
     os.makedirs(cache_dir, exist_ok=True)
-    temp_path = os.path.join(cache_dir, f"temp.{exp}")
+    temp_path = os.path.join(cache_dir, f"temp.mp3")
 
     try:
         # Скачивание файла

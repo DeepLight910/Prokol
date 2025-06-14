@@ -36,7 +36,7 @@ exe = EXE(
     a.datas,
     [],
     manifest= 'app.manifest',
-    name='Armyane Horror 8',       # Имя выходного файла
+    name='Armyane Horror X',       # Имя выходного файла
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
