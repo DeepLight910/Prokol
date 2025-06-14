@@ -1,7 +1,7 @@
 from ctypes import *
 
-def Disable():
+def Disable(): # Отключаем ввод
     windll.user32.BlockInput(True)
 
-def Enable():
+def Enable(): # Включаем ввод
     windll.user32.BlockInput(False)

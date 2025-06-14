@@ -41,7 +41,6 @@ def set_wallpaper(image_path):
         SPIF_SENDCHANGE = 0x02
 
         if not os.path.exists(image_path):
-            print(f"Файл не найден: {image_path}")
             return False
 
         ctypes.windll.user32.SystemParametersInfoW(
@@ -50,10 +49,8 @@ def set_wallpaper(image_path):
             image_path,
             SPIF_UPDATEINIFILE | SPIF_SENDCHANGE
         )
-        print(f"Установлены новые обои: {image_path}")
         return True
     except Exception as e:
-        print(f"Ошибка при установке обоев: {e}")
         return False
 
 
@@ -76,13 +73,11 @@ def wallpaper_action(action, image_path=None):
     if action == "restore":
         if os.path.exists(original_path):
             return set_wallpaper(original_path)
-        print("Оригинальные обои не найдены. Сначала выполните установку новых обоев.")
         return False
 
     # Установка новых обоев
     elif action == "set":
         if not image_path:
-            print("Для действия 'set' необходимо указать image_path")
             return False
 
         # Преобразуем относительный путь в абсолютный
@@ -100,5 +95,4 @@ def wallpaper_action(action, image_path=None):
         return set_wallpaper(abs_path)
 
     else:
-        print(f"Неподдерживаемое действие: {action}")
         return False

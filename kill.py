@@ -62,5 +62,4 @@ def Kill(message):
                 continue
 
     except Exception as e:
-        # Отправка ошибки администратору
-        print(f"❌ Ошибка при закрытии приложений: {str(e)}")
+        pass
